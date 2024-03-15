@@ -23,7 +23,7 @@ function App() {
           </Routes>
         </Box>
       </BrowserRouter>
-    </DataProvider>
+    </DataProvider> 
   );
 }
 

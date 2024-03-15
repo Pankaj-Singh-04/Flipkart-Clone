@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Box, Button, Typography, styled ,Badge} from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import {Link} from 'react-router-dom'
@@ -57,19 +57,28 @@ const LoginUser = styled(Typography)`
 const CustomButtons = () => {
     const cartDetails=useSelector(state=>state.cart);
     const {cartItems}=cartDetails;
-    const [account,setAccount] = useContext(DataContext);
+    const [userName,setUserName] = useContext(DataContext);
+    // const [userName,setUserName]=useState("");
     const [open, setOpen] = useState(false);
     // const account = useContext(DataContext);
     const openDialog = () => {
         setOpen(true);
     }
+    useEffect(()=>{
+        if(localStorage.getItem("userData")){
+            const storedDataString = localStorage.getItem("userData");
+            const storedData = JSON.parse(storedDataString);
+            // console.log(storedData)
+            setUserName(storedData.firstname);
+        }
+    },[userName]);
     return (
         <div>
             <Wrapper>
             {/* <Profile username="vk"/> */}
-                {account ? (
+                {userName ? (
                     <>
-                        <Profile account={account} setAccount={setAccount}/>
+                        <Profile userName={userName} setUserName={setUserName}/>
                     </>
                 ) : (
                     <LoginButton onClick={() => openDialog()} variant="contained">

@@ -98,7 +98,7 @@ const LoginDailog = ({ open, setOpen }) => {
 
     const [error,setError]=useState(false);
 
-    const [accountName, setAccountName] = useContext(DataContext);
+    const [userName, setUserName] = useContext(DataContext);
 
     // const {setAccount}
 
@@ -146,7 +146,10 @@ const LoginDailog = ({ open, setOpen }) => {
                     // alert("Some issues occurred during registration. 😞");
                     // console.log(response);
                 } else {
-                    setAccountName(signup.firstname);
+                    let updatedData = {  ...(response.data.data),password:"" };
+                    const updatedString = JSON.stringify(updatedData);
+                    localStorage.setItem("userData", updatedString);
+                    setUserName(signup.firstname);
                     toast.info("Signup Successfully")
                     // alert("Successfully signup 👍");
                     handleclose();
@@ -167,20 +170,24 @@ const LoginDailog = ({ open, setOpen }) => {
             toast.error("Please fill in all fields.");
         }
     };
-    const loginUser=async()=>{
-        let response= await authenticateLogin(login);
-        // console.log(response);
-        if(response.status===200){
+    const loginUser = async () => {
+        let response = await authenticateLogin(login);
+        // console.log(response.data.data);
+        if (response.status === 200) {
+            const updatedData = {  ...(response.data.data),password:""};
+            // delete updatedData._id;
+            // console.log(updatedData)
+            const updatedString = JSON.stringify(updatedData);
+            localStorage.setItem("userData", updatedString);
+            setUserName(response.data.data.firstname);
             handleclose();
-            setAccountName(response.data.data.firstname);
-            toast.info("Login Successfully")
-        }
-        else{
-            toast.error("Error")
+            toast.info("Login Successfully");
+        } else {
+            toast.error("Error");
             setError(true);
         }
     }
-
+    
     return (
         <Dialog open={open} onClose={handleclose} PaperProps={{ sx: { maxWidth: 'unset' } }}>
             <Component style={{ display: "flex" }}>
